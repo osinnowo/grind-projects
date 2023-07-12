@@ -1,9 +1,6 @@
 package com.appcoy.school.management.api.app;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
 
@@ -11,6 +8,8 @@ import java.time.LocalDate;
 @Data
 public class BaseEntity<T> {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "sequence_name")
+    @SequenceGenerator(name = "sequence_name", sequenceName = "sequence_generator")
     private Long id;
     private LocalDate dateCreated;
     private LocalDate dateModified;
@@ -19,8 +18,13 @@ public class BaseEntity<T> {
     private Boolean isModified;
 
     @PrePersist
-    public void prePersist() { }
+    public void prePersist() {
+        dateCreated = LocalDate.now();
+        dateModified = LocalDate.now();
+    }
 
     @PreUpdate
-    public void preUpdate() { }
+    public void preUpdate() {
+        dateModified = LocalDate.now();
+    }
 }
